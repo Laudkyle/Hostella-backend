@@ -7,6 +7,9 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.permissions import AllowAny
 from .models import NewUser
 from rest_framework import generics
+from django.core.mail import send_mail
+import random
+from .emails import *
 
 
 class CustomUserCreate(APIView):
@@ -16,6 +19,7 @@ class CustomUserCreate(APIView):
         serializer = CustomUserSerializer(data=request.data)
         if serializer.is_valid():
             user = serializer.save()
+            mail(serializer.data['email'])
             if user:
                 json = serializer.data
                 return Response(json, status=status.HTTP_201_CREATED)
