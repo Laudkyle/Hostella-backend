@@ -2,7 +2,7 @@ from django.db import models
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager
-
+import uuid
 
 class CustomAccountManager(BaseUserManager):
 
@@ -39,11 +39,16 @@ class NewUser(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(_('email address'), unique=True)
     user_name = models.CharField(max_length=150, unique=True)
     first_name = models.CharField(max_length=150, blank=True)
-    start_date = models.DateTimeField(default=timezone.now)
-    about = models.TextField(_(
-        'about'), max_length=500, blank=True)
     is_staff = models.BooleanField(default=False)
     is_active = models.BooleanField(default=False)
+    otp = models.CharField(max_length=6, null=True, blank=True)
+    last_Name = models.CharField(max_length=200,null=True)
+    password = models.CharField(max_length=200,null=True)
+    gender = models.CharField(max_length=200,null=True)
+    photo = models.CharField(max_length=200,null=True)
+    phoneNumber = models.CharField(max_length=200,null=True)
+    registrationDate = models.DateField(auto_now_add=True,null=True)
+    documentId = models.UUIDField(default=uuid.uuid4(), editable=False, unique=True,null=True)
 
     objects = CustomAccountManager()
 
