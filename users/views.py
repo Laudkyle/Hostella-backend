@@ -2,7 +2,7 @@ from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from .serializers import CustomUserSerializer,ChangePasswordSerializer
+from .serializers import CustomUserSerializer,ChangePasswordSerializer,VerifyAccountSerializer
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.permissions import AllowAny
 from .models import NewUser
@@ -46,3 +46,44 @@ class ChangePasswordView(generics.UpdateAPIView):
     queryset = NewUser.objects.all()
     permission_classes = (IsAuthenticated,)
     serializer_class = ChangePasswordSerializer
+
+#verification ciew
+class VerifiyOTP(APIView):
+    def post(self,request):
+        try:
+            data =request.data
+            serializer =VerifyAccountSerializer(data=data)
+            if serializer.is_valid():
+                email = serializer.data['email']
+                otp = serializer.data['otp']
+
+                user =NewUser.objects.filter(email=email)
+                if not user.exists():
+                    return Response({
+                        'status': 400,
+                        'message': "Something went wrong!!!",
+                        'data': "Invalid Email, Please enter a valid mail"
+                    })
+                if user[0].otp != otp:
+                    return Response({
+                        'status': 400,
+                        'message': "Something went wrong!!!",
+                        'data': "Wrong OTP"
+                    })
+                user = user.first()
+                user.is_verified = True
+                user.save()
+                return Response({
+                    'status':200,
+                    'message': "Account successfully verfied !!!",
+                    'data':{}
+                })
+            return Response({
+                'status': 400,
+                'message': "Something went wrong!!!",
+                'data': serializer.errors
+            })
+
+        except Exception as e:
+            print(e)
+

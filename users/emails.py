@@ -5,7 +5,7 @@ from .models import NewUser
 
 def mail(email):
     otp = random.randint(100000,999999)
-    send_mail("Tester",
+    send_mail("HOSTELLA ACCOUNT VERIFICATION",
               f"Here is verificaion code : {otp}",
               "kyleaby1@gmail.com",
               [email],

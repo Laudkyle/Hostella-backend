@@ -41,7 +41,8 @@ class NewUser(AbstractBaseUser, PermissionsMixin):
     user_name = models.CharField(max_length=150)
     first_name = models.CharField(max_length=150, blank=True)
     is_staff = models.BooleanField(default=False)
-    is_active = models.BooleanField(default=False)
+    is_active = models.BooleanField(default=True)
+    is_verified=models.BooleanField(default=False)
     otp = models.CharField(max_length=6, null=True, blank=True)
     last_name = models.CharField(max_length=200,null=True)
     password = models.CharField(max_length=200,null=True)
@@ -67,6 +68,8 @@ class UserProfile(models.Model):
     photo = models.ImageField(upload_to="images/", blank=True, null=True)
     phoneNumber = models.CharField(max_length=200,null=True)
     level =models.CharField(max_length=10,null=True)
+
+
     
     def __str__(self):
         return f"{self.user.user_name}'s Profile"
