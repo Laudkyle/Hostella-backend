@@ -3,6 +3,7 @@ from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager
 import uuid
+from django.contrib.auth import get_user_model
 
 class CustomAccountManager(BaseUserManager):
 
@@ -37,7 +38,7 @@ class CustomAccountManager(BaseUserManager):
 class NewUser(AbstractBaseUser, PermissionsMixin):
 
     email = models.EmailField(_('email address'), unique=True)
-    user_name = models.CharField(max_length=150, unique=True)
+    user_name = models.CharField(max_length=150)
     first_name = models.CharField(max_length=150, blank=True)
     is_staff = models.BooleanField(default=False)
     is_active = models.BooleanField(default=False)
@@ -45,7 +46,7 @@ class NewUser(AbstractBaseUser, PermissionsMixin):
     last_Name = models.CharField(max_length=200,null=True)
     password = models.CharField(max_length=200,null=True)
     gender = models.CharField(max_length=200,null=True)
-    photo = models.CharField(max_length=200,null=True)
+    photo = models.ImageField(upload_to="images/", blank=True, null=True)
     phoneNumber = models.CharField(max_length=200,null=True)
     registrationDate = models.DateField(auto_now_add=True,null=True)
     documentId = models.UUIDField(default=uuid.uuid4(), editable=False, unique=True,null=True)
@@ -57,3 +58,19 @@ class NewUser(AbstractBaseUser, PermissionsMixin):
 
     def __str__(self):
         return self.user_name
+    
+#Creating the use profile
+User = get_user_model()
+class UserProfile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    email = models.EmailField(_('email address'), unique=True)
+    user_name = models.CharField(max_length=150)
+    first_name = models.CharField(max_length=150, blank=True)
+    last_Name = models.CharField(max_length=200,null=True)
+    gender = models.CharField(max_length=200,null=True)
+    photo = models.ImageField(upload_to="images/", blank=True, null=True)
+    phoneNumber = models.CharField(max_length=200,null=True)
+    level =models.CharField(max_length=10,null=True)
+
+    def __str__(self):
+        return f"{self.user.user_name}'s Profile"
