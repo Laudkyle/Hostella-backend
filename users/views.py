@@ -4,7 +4,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from .serializers import CustomUserSerializer,ChangePasswordSerializer,VerifyAccountSerializer
 from rest_framework_simplejwt.tokens import RefreshToken
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import *
 from .models import NewUser
 from rest_framework import generics
 from django.core.mail import send_mail
@@ -39,7 +39,6 @@ class BlacklistTokenUpdateView(APIView):
         except Exception as e:
             return Response(status=status.HTTP_400_BAD_REQUEST)
 
-from rest_framework.permissions import IsAuthenticated
 
 class ChangePasswordView(generics.UpdateAPIView):
 
@@ -47,7 +46,7 @@ class ChangePasswordView(generics.UpdateAPIView):
     permission_classes = (IsAuthenticated,)
     serializer_class = ChangePasswordSerializer
 
-#verification ciew
+#verification view
 class VerifiyOTP(APIView):
     def post(self,request):
         try:
