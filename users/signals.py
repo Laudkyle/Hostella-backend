@@ -9,5 +9,5 @@ def createUserProfile(sender, instance, created, **kwargs):
     if created:
         userInfo= NewUser.objects.filter(user_name=instance)
         userInfo= userInfo.first()
-        UserProfile.objects.create(user=instance, user_name= userInfo.user_name, first_name=userInfo.first_name, last_name=userInfo.last_name)
+        UserProfile.objects.create(user=instance, user_name= userInfo.user_name, first_name=userInfo.first_name, last_name=userInfo.last_name, documentId=userInfo.documentId)
         

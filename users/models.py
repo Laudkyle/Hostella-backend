@@ -46,7 +46,7 @@ class NewUser(AbstractBaseUser, PermissionsMixin):
     last_name = models.CharField(max_length=200,null=True)
     password = models.CharField(max_length=200,null=True)
     registrationDate = models.DateField(auto_now_add=True,null=True)
-    documentId = models.UUIDField(default=uuid.uuid4(), unique=True,null=True)
+    documentId = models.UUIDField(default=uuid.uuid4(),unique=True)
 
     objects = CustomAccountManager()
 
@@ -67,7 +67,7 @@ class UserProfile(models.Model):
     photo = models.ImageField(upload_to="images/", blank=True, null=True)
     phoneNumber = models.CharField(max_length=200,null=True)
     level =models.CharField(max_length=10,null=True)
-
+    documentId=models.CharField(max_length=200,null=True)
 
         
     def __str__(self):

@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from users.models import NewUser
+from users.models import *
 from rest_framework.validators import UniqueValidator
 from django.contrib.auth.password_validation import validate_password
 
@@ -59,3 +59,10 @@ class ChangePasswordSerializer(serializers.ModelSerializer):
 class VerifyAccountSerializer(serializers.Serializer):
     email = serializers.EmailField()
     otp = serializers.CharField()
+
+# UserProfile serializer
+class UserSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = UserProfile
+        fields = ['first_name', 'last_name', 'level','gender', 'photo', 'phoneNumber']

@@ -2,15 +2,19 @@ from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from .serializers import CustomUserSerializer,ChangePasswordSerializer,VerifyAccountSerializer
+from .serializers import *
 from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework.authentication import get_authorization_header
 from rest_framework.permissions import *
-from .models import NewUser
+from .models import *
+from rest_framework.views import APIView
+from rest_framework.response import Response
 from rest_framework import generics
 from django.core.mail import send_mail
 import random
 from .emails import *
-
+from rest_framework.decorators import api_view
+import jwt
 
 class CustomUserCreate(APIView):
     permission_classes = [AllowAny]
@@ -85,4 +89,29 @@ class VerifiyOTP(APIView):
 
         except Exception as e:
             print(e)
+
+# User profile view
+@api_view(['GET','PUT'])
+def userProfle(request,document_id,format=None):
+    try:
+        auth = get_authorization_header(request).split()
+        token=auth[1]
+        print(token)
+        payload = jwt.decode(jwt=token, key=settings.SECRET_KEY, algorithms=['HS256'])
+        if document_id==payload['user_id']:
+            user= UserProfile.objects.get(documentId=document_id)
+        else:
+            return Response('Validation failed', status=status.HTTP_403_FORBIDDEN)
+    except UserProfile.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+    if request.method =='GET':
+        serializer = UserSerializer(user)
+        return Response(serializer.data)
+    elif request.method == 'PUT':
+        serializer = UserSerializer(user, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
 

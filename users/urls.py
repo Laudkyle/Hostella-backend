@@ -8,4 +8,5 @@ urlpatterns = [
     path('verify/', VerifiyOTP.as_view()),
     path('changepassword/<int:pk>/', ChangePasswordView.as_view(), name='auth_change_password'),
     path('logout/blacklist/', BlacklistTokenUpdateView.as_view(), name='blacklist'),
+    path('profile/<str:document_id>/', userProfle),
 ]
